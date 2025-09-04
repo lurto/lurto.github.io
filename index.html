@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Regex Search</title>
+</head>
+<body>
+  <input id="pattern" placeholder="Enter regex" />
+  <div><a href=""id="result">empty link</a></div>
+
+  <script>
+    const patternEl = document.getElementById('pattern');
+    const resultEl = document.getElementById('result');
+
+    window.onload = function() {
+          fetch('/json.json')
+            .then(response => response.text())
+            .then((data) => {
+                json = data
+                console.log(json)
+            })
+    };
+
+    function update() {
+
+        let pattern = '"station"\\s*:\\s*"' + patternEl.value + '"[\\s\\S]*?"koord"\\s*:\\s*"([^"]+)"';
+        console.log(pattern)
+        if (pattern === '') {
+        resultEl.textContent = '';
+        return;
+        }
+        try {
+        // Create regex with global flag to find all matches
+        const re = new RegExp(pattern, 'gm');
+        const matches = [];
+        let m;
+        while ((m = re.exec(json)) !== null) {
+            // push full match; include capture groups if present
+            if (m.length > 1) {
+            matches.push(m.slice(1));
+            } else {
+            matches.push(m[0]);
+            }
+            // avoid infinite loop for zero-length matches
+            if (m.index === re.lastIndex) re.lastIndex++;
+        }
+        if(matches.length == 0){
+            resultEl.textContent = "empty link";
+            resultEl.hrefContent = "";
+            return;
+
+        }
+        resultEl.textContent = "https://map.geo.admin.ch/#/map?lang=en&center=" + matches + "&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408";
+        resultEl.href = "https://map.geo.admin.ch/#/map?lang=en&center=" + matches + "&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408";
+        } catch (e) {
+        resultEl.textContent = 'Invalid regex';
+        }
+    }
+
+    patternEl.addEventListener('input', update);
+  </script>
+</body>
+</html>
