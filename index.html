@@ -6,7 +6,7 @@
 </head>
 <body>
   <input id="pattern" placeholder="Enter regex" />
-  <div id="result"><a href="">empty link</a></div>
+  <div id="result">Start a search :)</div>
 
   <script>
     const patternEl = document.getElementById('pattern');
@@ -45,12 +45,11 @@
             if (m.index === re.lastIndex) re.lastIndex++;
         }
         if(matches.length == 0){
-            resultEl.textContent = "empty link";
-            resultEl.hrefContent = "";
+             resultEl.innerHTML = 'no results'
             return;
 
         }
-        resultEl.innerHTML = ""
+        resultEl.innerHTML = ''
         if (matches.length < 20){
                   matches.forEach((match) => {
           console.log(match)
@@ -64,6 +63,8 @@
           resultEl.innerHTML += '<a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
 
           });
+        }else{
+          resultEl.innerHTML = 'too many results'
         }
 
 
