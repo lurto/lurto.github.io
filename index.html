@@ -6,7 +6,7 @@
 </head>
 <body>
   <input id="pattern" placeholder="Enter regex" />
-  <div><a href=""id="result">empty link</a></div>
+  <div id="result"><a href="">empty link</a></div>
 
   <script>
     const patternEl = document.getElementById('pattern');
@@ -23,7 +23,7 @@
 
     function update() {
 
-        let pattern = '"station"\\s*:\\s*"' + patternEl.value + '"[\\s\\S]*?"koord"\\s*:\\s*"([^"]+)"';
+        let pattern = '"station"\\s*:\\s*"' + patternEl.value + '.*"[\\s\\S]*?"koord"\\s*:\\s*"([^"]+)"';
         console.log(pattern)
         if (pattern === '') {
         resultEl.textContent = '';
@@ -50,9 +50,25 @@
             return;
 
         }
-        resultEl.textContent = "https://map.geo.admin.ch/#/map?lang=en&center=" + matches + "&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408";
-        resultEl.href = "https://map.geo.admin.ch/#/map?lang=en&center=" + matches + "&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408";
-        } catch (e) {
+        resultEl.innerHTML = ""
+        if (matches.length < 20){
+                  matches.forEach((match) => {
+          console.log(match)
+          console.log(matches)
+          // validate simple format: two numbers separated by a comma
+          const parts = match.toString().split(",");
+          if (parts.length !== 2 || parts.some(p => isNaN(Number(p.trim())))) {
+            console.warn("Skipping invalid item:", match);
+            return;
+          }        
+          resultEl.innerHTML += '<a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
+
+          });
+        }
+
+
+                } catch (e) {
+                  console.log(e)
         resultEl.textContent = 'Invalid regex';
         }
     }
