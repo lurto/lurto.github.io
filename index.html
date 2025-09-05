@@ -2,11 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Regex Search</title>
+  <title>Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      .wrapper {
+        margin-top: 2% ;
+        margin-left: 2% ;
+      }
+      .input{
+        margin-bottom: 20px;
+      }
+      #pattern{
+        min-height: 40px;
+        min-width: 300px;
+        border-radius: 8px;
+        
+      }
+
+      a{
+        display: inline-block;
+         padding-bottom: 8px;
+      }
+       
+      #result{
+        background-color: lightgrey;
+        border-radius: 8px;
+        padding: 10px;
+        padding-right: 30px;
+        max-width: fit-content;
+        overflow: hidden;
+        text-wrap: wrap;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          font-size: 18px;
+          }
+        a {
+          font-size: 15px;
+        }
+        }
+
+  </style>
 </head>
 <body>
-  <input id="pattern" placeholder="Enter regex" />
-  <div id="result">Start a search :)</div>
+  <div class="wrapper">
+    <div class="input"><input id="pattern" placeholder="Enter Name" /></div>
+    <div id="result">Start a search :)</div>
+  </div>
 
   <script>
     const patternEl = document.getElementById('pattern');
@@ -51,20 +94,21 @@
         }
         resultEl.innerHTML = ''
         if (matches.length < 20){
-                  matches.forEach((match) => {
+          matches.forEach((match, idx) => {
           console.log(match)
           console.log(matches)
+          console.log(idx)
           // validate simple format: two numbers separated by a comma
           const parts = match.toString().split(",");
           if (parts.length !== 2 || parts.some(p => isNaN(Number(p.trim())))) {
             console.warn("Skipping invalid item:", match);
             return;
           }        
-          resultEl.innerHTML += '<a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
+          resultEl.innerHTML += '<b>' + (idx+1) +' </b><a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
 
           });
         }else{
-          resultEl.innerHTML = 'too many results'
+          resultEl.innerHTML = 'too many results => ' + matches.length
         }
 
 
