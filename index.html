@@ -16,8 +16,13 @@
         min-height: 40px;
         min-width: 300px;
         border-radius: 8px;
-        
       }
+      #coord{
+        min-height: 40px;
+        min-width: 300px;
+        border-radius: 8px;
+      }
+
 
       a{
         display: inline-block;
@@ -47,12 +52,17 @@
 </head>
 <body>
   <div class="wrapper">
-    <div class="input"><input id="pattern" placeholder="Enter Name" /></div>
+    <div class="input">
+        <input id="pattern" placeholder="Enter Name like: Sunrise BE101-1"/>
+         or 
+        <input id="coord" placeholder="Enter Coordinates like: 2'601'578.48,1'200'438.35"/>
+    </div>
     <div id="result">Start a search :)</div>
   </div>
 
   <script>
     const patternEl = document.getElementById('pattern');
+    const coordinatesEl = document.getElementById('coord');
     const resultEl = document.getElementById('result');
 
     window.onload = function() {
@@ -104,7 +114,7 @@
             console.warn("Skipping invalid item:", match);
             return;
           }        
-          resultEl.innerHTML += '<b>' + (idx+1) +' </b><a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=8&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
+          resultEl.innerHTML += '<b>' + (idx+1) +' </b><a target="_blank" href="https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=11&topic=funksender&crosshair=marker,' + match + '&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408">https://map.geo.admin.ch/#/map?lang=en&center=' + match + '&z=11&topic=funksender&crosshair=marker,' + match + '&layers=ch.bakom.standorte-mobilfunkanlagen&bgLayer=ch.swisstopo.pixelkarte-farbe&catalogNodes=funksender,403,408</a><br>';
 
           });
         }else{
@@ -117,6 +127,15 @@
         resultEl.textContent = 'Invalid regex';
         }
     }
+    
+    coordinatesEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = coordinatesEl.value.trim();
+        resultEl.innerHTML = '<a target="_blank" href="https://map.geo.admin.ch/#/map?swisssearch=' + value + '&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen">https://map.geo.admin.ch/#/map?swisssearch=' + value + '&topic=funksender&layers=ch.bakom.standorte-mobilfunkanlagen</a>'
+        input.value = '';
+      }
+    });
 
     patternEl.addEventListener('input', update);
   </script>
